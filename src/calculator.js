@@ -1,6 +1,6 @@
-﻿#!/usr/bin/env node
-// calculator.js
+﻿// calculator.js
 // Supported operations: addition (add, +), subtraction (sub, -), multiplication (mul, *), division (div, /)
+// Additional operations: modulo (mod, %), power (pow, ^), square root (sqrt)
 
 function add(a, b) { return a + b; }
 function sub(a, b) { return a - b; }
@@ -12,24 +12,45 @@ function div(a, b) {
   return a / b;
 }
 
+function modulo(a, b) {
+  if (b === 0) {
+    throw new Error('Modulo by zero');
+  }
+  return a % b;
+}
+
+function power(base, exponent) {
+  return Math.pow(base, exponent);
+}
+
+function squareRoot(n) {
+  if (n < 0) {
+    throw new Error('Square root of negative number');
+  }
+  return Math.sqrt(n);
+}
+
 function printUsage() {
-  console.log('Usage: node src/calculator.js <operation> <num1> <num2>');
+  console.log('Usage: node src/calculator.js <operation> <num1> [<num2>]');
   console.log('Operations:');
-  console.log('  add | +    : addition');
-  console.log('  sub | -    : subtraction');
-  console.log('  mul | *    : multiplication');
-  console.log('  div | /    : division');
+  console.log('  add | +        : addition');
+  console.log('  sub | -        : subtraction');
+  console.log('  mul | *        : multiplication');
+  console.log('  div | /        : division');
+  console.log('  mod | %        : modulo (a mod b)');
+  console.log('  pow | ^        : exponentiation (base ^ exponent)');
+  console.log('  sqrt           : square root (single operand)');
 }
 
 if (require.main === module) {
   const [, , op, aStr, bStr] = process.argv;
-  if (!op || !aStr || !bStr) {
+  if (!op || !aStr) {
     printUsage();
     process.exit(1);
   }
   const a = Number(aStr);
-  const b = Number(bStr);
-  if (Number.isNaN(a) || Number.isNaN(b)) {
+  const b = bStr !== undefined ? Number(bStr) : undefined;
+  if (Number.isNaN(a) || (bStr !== undefined && Number.isNaN(b))) {
     console.error('Operands must be numbers.');
     process.exit(2);
   }
@@ -50,11 +71,18 @@ if (require.main === module) {
         break;
       case 'div':
       case '/':
-        if (b === 0) {
-          console.error('Error: Division by zero');
-          process.exit(3);
-        }
         result = div(a, b);
+        break;
+      case 'mod':
+      case '%':
+        result = modulo(a, b);
+        break;
+      case 'pow':
+      case '^':
+        result = power(a, b);
+        break;
+      case 'sqrt':
+        result = squareRoot(a);
         break;
       default:
         console.error(`Unknown operation: ${op}`);
@@ -68,5 +96,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { add, sub, mul, div };
-
+module.exports = { add, sub, mul, div, modulo, power, squareRoot };

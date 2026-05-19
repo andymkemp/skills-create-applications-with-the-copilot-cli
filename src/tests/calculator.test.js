@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { add, sub, mul, div } = require('../calculator');
+const { add, sub, mul, div, modulo, power, squareRoot } = require('../calculator');
 
 describe('calculator basic operations', () => {
   it('addition: 2 + 3 = 5', () => {
@@ -34,5 +34,35 @@ describe('calculator basic operations', () => {
 
   it('large numbers', () => {
     expect(add(1e12, 1)).to.equal(1000000000001);
+  });
+});
+
+describe('calculator extended operations', () => {
+  it('modulo: 5 % 2 = 1', () => {
+    expect(modulo(5, 2)).to.equal(1);
+  });
+
+  it('modulo by zero throws', () => {
+    expect(() => modulo(5, 0)).to.throw('Modulo by zero');
+  });
+
+  it('power: 2 ^ 3 = 8', () => {
+    expect(power(2, 3)).to.equal(8);
+  });
+
+  it('power with negative exponent: 2 ^ -1 = 0.5', () => {
+    expect(power(2, -1)).to.be.closeTo(0.5, 1e-12);
+  });
+
+  it('squareRoot: sqrt(16) = 4', () => {
+    expect(squareRoot(16)).to.equal(4);
+  });
+
+  it('squareRoot of non-perfect square', () => {
+    expect(squareRoot(2)).to.be.closeTo(Math.sqrt(2), 1e-12);
+  });
+
+  it('squareRoot of negative number throws', () => {
+    expect(() => squareRoot(-9)).to.throw('Square root of negative number');
   });
 });
